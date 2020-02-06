@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Characters">
+      <UniqueIdentifier>{6eb3862b-d63b-49da-8a21-361a2abe6590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Characters\Headers">
+      <UniqueIdentifier>{c0ecbf27-409f-4a1d-8eeb-0ce1ae635469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maps">
+      <UniqueIdentifier>{d9625914-1b61-4f45-94f4-103f0b807dd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maps\Headers">
+      <UniqueIdentifier>{790f3c5b-8be3-40d4-81c7-28a511eee9ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Headers\DrnD2D.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="Characters\Character.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Maps\DrnMap.cpp">
+      <Filter>Maps</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Headers\DrnD2D.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Characters\Headers\Character.h">
+      <Filter>Characters\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Maps\Headers\DrnMap.h">
+      <Filter>Maps\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\DrnResourceCompiler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Blueman-1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Blueman-2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Blueman-3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
