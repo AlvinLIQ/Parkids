@@ -1,21 +1,23 @@
 #include <Windows.h>
-#include "Characters/Headers/Character.h"
-#include "Headers/DrnResourceCompiler.h"
+#include "Maps/Headers/DrnMap.h"
 
 #ifndef UNICODE
 #define UNICODE
 #endif
 
 DrnD2D* drnD2D;
+DrnMap* drnMap;
 Character* player;
-DrnResourceItemInfo itemInfo;
 
 bool waitingForKey = false;
 
-const wchar_t resStr[] = 
+const wchar_t resStr[] =
 L"[ land.png ]\n"
 L"x:0.2 0.5\n"
-L"y:0.9 1.0";
+L"y:0.9 1.0\n"
+L"[ land.png ]\n"
+L"x:0.5 0.6\n"
+L"y:0.6 1.0";
 
 D2D1_SIZE_F d2dSize = {};
 
@@ -38,11 +40,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 	player = new Character(L"Blueman-");
 	ShowWindow(hwnd, ParamNum);
 	drnD2D = new DrnD2D(hwnd);
-	while (drnD2D->txtFormat == nullptr);
+//	while (drnD2D->txtFormat == nullptr);
 	for (int i = 0; i < 3; i++)
 		drnD2D->LoadBitmapFromFilename((L"Resources/" + player->CharacterName + (wchar_t)(i + 49) + L".png").c_str(), &player->CharacterBitmap[i]);
-
-	itemInfo = GetFirstItemInfo(resStr);
 
 	MSG msg = {};
 	while (GetMessage(&msg, hwnd, 0, 0))
@@ -77,26 +77,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		ID2D1SolidColorBrush* txtBrush;
 		drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &txtBrush);
 
-		if (!d2dSize.height)
+		if (drnMap == nullptr)
 		{
 			d2dSize = drnD2D->d2dContext->GetSize();
-			itemInfo.left *= d2dSize.width;
-			itemInfo.top *= d2dSize.height;
-			itemInfo.right *= d2dSize.width;
-			itemInfo.bottom *= d2dSize.height;
+			drnMap = new DrnMap(resStr, d2dSize, drnD2D);
 		}
-		
-		drnD2D->d2dContext->DrawRectangle(D2D1::RectF(itemInfo.left, itemInfo.top, itemInfo.right, itemInfo.bottom), txtBrush);
+		drnMap->DrawAll();
+//		drnD2D->d2dContext->DrawRectangle(D2D1::RectF(drnMap->ItemsInfo->left, drnMap->ItemsInfo->top, drnMap->ItemsInfo->right, drnMap->ItemsInfo->bottom), txtBrush);
 		if (!player->IsJumping)
 		{
-			player->BaseX = itemInfo.left;
-			player->BaseY = itemInfo.top - 60;
+			player->BaseX = drnMap->ItemsInfo->left;
+			player->BaseY = drnMap->ItemsInfo->top - 60;
 		}
 		float left = player->BaseX - player->CharacterPos.x,
 			top = player->BaseY - player->CharacterPos.y;
-		if ((left + 24 < itemInfo.left || left > itemInfo.right - 8) && player->CharacterPos.y <= 0)
+		if ((left + 24 < drnMap->ItemsInfo->left || left > drnMap->ItemsInfo->right - 8) && player->CharacterPos.y <= 0)
 		{
-			if (top > itemInfo.bottom)
+			if (top > drnMap->ItemsInfo->bottom)
 			{
 				drnD2D->d2dContext->DrawTextW(L"       You died\nPress Enter To Continue", 40, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 300, 48), txtBrush);
 				player->CharacterPos.x = 0;
@@ -105,10 +102,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			else
 			{
-				player->CharacterPos.y -= 100;
+				player->CharacterPos.y -= 80;
 				player->SetDirection(1);
 				player->Jumping();
 			}
+		}
+		if (left > drnMap->ItemsInfo->left && left + 24 < drnMap->ItemsInfo->bottom)
+		{
+
 		}
 		drnD2D->d2dContext->DrawBitmap(player->CharacterBitmap[player->CharacterState], D2D1::RectF(left, top, left + 32, top + 64));
 		drnD2D->d2dContext->EndDraw();

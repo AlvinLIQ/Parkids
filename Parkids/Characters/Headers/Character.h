@@ -3,6 +3,8 @@
 #include <iostream>
 #include "../../Headers/DrnD2D.h"
 
+#define WalkStep 1
+
 class Character
 {
 public:
