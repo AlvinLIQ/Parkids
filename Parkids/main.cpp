@@ -5,6 +5,8 @@
 #define UNICODE
 #endif
 
+#define CurrentItem drnMap->ItemsInfo[drnMap->CurrentIndex]
+
 DrnD2D* drnD2D;
 DrnMap* drnMap;
 Character* player;
@@ -17,11 +19,28 @@ L"x:0.2 0.5\n"
 L"y:0.9 1.0\n"
 L"[ land.png ]\n"
 L"x:0.5 0.6\n"
-L"y:0.6 1.0";
+L"y:0.73 1.0\n"
+L"[ land.png ]\n"
+L"x:0.1 0.2\n"
+L"y:0.85 1.0\n"
+L"[ land.png ]\n"
+L"x:0.0 0.1\n"
+L"y:0.8 1.0\n"
+L"[ land.png ]\n"
+L"x:0.25 0.3\n"
+L"y:0.8 0.82\n"
+L"[ land.png ]\n"
+L"x:0.33 0.38\n"
+L"y:0.8 0.82\n"
+L"[ land.png ]\n"
+L"x:0.41 0.46\n"
+L"y:0.8 0.82";
 
 D2D1_SIZE_F d2dSize = {};
+PTP_TIMER d2dTimer;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+void CALLBACK drawTimer(PTP_CALLBACK_INSTANCE instance, PVOID context, PTP_TIMER timer);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int ParamNum)
 {
@@ -40,9 +59,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 	player = new Character(L"Blueman-");
 	ShowWindow(hwnd, ParamNum);
 	drnD2D = new DrnD2D(hwnd);
-//	while (drnD2D->txtFormat == nullptr);
+	while (drnD2D->d2dContext == nullptr);
 	for (int i = 0; i < 3; i++)
 		drnD2D->LoadBitmapFromFilename((L"Resources/" + player->CharacterName + (wchar_t)(i + 49) + L".png").c_str(), &player->CharacterBitmap[i]);
+
+	d2dTimer = CreateThreadpoolTimer(&drawTimer, NULL, NULL);
+
+	ULARGE_INTEGER uTime;
+	uTime.QuadPart = (LONGLONG)-(10000000);
+	FILETIME dueTime;
+	dueTime.dwHighDateTime = uTime.HighPart;
+	dueTime.dwLowDateTime = uTime.LowPart;
+	SetThreadpoolTimer(d2dTimer, &dueTime, (DWORD)16, 0);
 
 	MSG msg = {};
 	while (GetMessage(&msg, hwnd, 0, 0))
@@ -54,23 +82,42 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 	return 0;
 }
 
+void SetCurrentItem(size_t newIndex)
+{
+	drnMap->CurrentIndex = newIndex;
+	player->CharacterPos.x = player->IsRight ? CurrentItem.left : CurrentItem.right - 32;
+	player->CharacterPos.y = CurrentItem.top - 60;
+}
+
+void CALLBACK drawTimer(PTP_CALLBACK_INSTANCE instance, PVOID context, PTP_TIMER timer)
+{
+	if (drnMap == nullptr)
+	{
+		d2dSize = drnD2D->d2dContext->GetSize();
+		drnMap = new DrnMap(resStr, d2dSize, drnD2D);
+		SetCurrentItem(0);
+	}
+	drnMap->GetRange(player->CharacterPos, &player->CharacterRange);
+	player->PrepareDraw();
+}
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		CloseThreadpoolTimer(d2dTimer);
 		delete drnD2D;
 		exit(0);
 
 	case WM_PAINT:
 	{
-		if (waitingForKey)
+		if (GetAsyncKeyState(VK_BACK))
 		{
-			waitingForKey = !GetAsyncKeyState(VK_RETURN);
-			return 0;
+			player->IsRight = false;
+			SetCurrentItem(0);
 		}
-		player->PrepareDraw();
 
 		drnD2D->d2dContext->BeginDraw();
 		drnD2D->d2dContext->Clear();
@@ -81,37 +128,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			d2dSize = drnD2D->d2dContext->GetSize();
 			drnMap = new DrnMap(resStr, d2dSize, drnD2D);
+			SetCurrentItem(0);
 		}
+		
+		float left = player->GetX(),
+			top = player->GetY();
 		drnMap->DrawAll();
-//		drnD2D->d2dContext->DrawRectangle(D2D1::RectF(drnMap->ItemsInfo->left, drnMap->ItemsInfo->top, drnMap->ItemsInfo->right, drnMap->ItemsInfo->bottom), txtBrush);
-		if (!player->IsJumping)
+		drnD2D->d2dContext->DrawBitmap(player->CharacterBitmap[player->CharacterState], player->GetRectF());
+		if (drnMap->IsInside(player->CharacterPos, 0))
 		{
-			player->BaseX = drnMap->ItemsInfo->left;
-			player->BaseY = drnMap->ItemsInfo->top - 60;
+			drnD2D->d2dContext->DrawTextW(L"Congratulations!\nyou've passed this level.", 44, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
-		float left = player->BaseX - player->CharacterPos.x,
-			top = player->BaseY - player->CharacterPos.y;
-		if ((left + 24 < drnMap->ItemsInfo->left || left > drnMap->ItemsInfo->right - 8) && player->CharacterPos.y <= 0)
+		if (drnMap->IsInside(player->CharacterPos, 3))
 		{
-			if (top > drnMap->ItemsInfo->bottom)
-			{
-				drnD2D->d2dContext->DrawTextW(L"       You died\nPress Enter To Continue", 40, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 300, 48), txtBrush);
-				player->CharacterPos.x = 0;
-				player->CharacterPos.y = 0;
-				waitingForKey = true;
-			}
-			else
-			{
-				player->CharacterPos.y -= 80;
-				player->SetDirection(1);
-				player->Jumping();
-			}
+			drnD2D->d2dContext->DrawTextW(L"Oh, you lost.", 14, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
-		if (left > drnMap->ItemsInfo->left && left + 24 < drnMap->ItemsInfo->bottom)
-		{
-
-		}
-		drnD2D->d2dContext->DrawBitmap(player->CharacterBitmap[player->CharacterState], D2D1::RectF(left, top, left + 32, top + 64));
 		drnD2D->d2dContext->EndDraw();
 		drnD2D->dxgiSwapChain->Present(1, 0);
 	}

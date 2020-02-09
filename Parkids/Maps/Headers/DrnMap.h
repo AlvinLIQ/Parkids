@@ -4,6 +4,7 @@
 #include "../../Characters/Headers/Character.h"
 
 #define itemMaxSize 20
+#define NOT_FOUND (size_t)-1
 
 class DrnMap
 {
@@ -13,9 +14,16 @@ public:
 
 	DrnResourceItemInfo ItemsInfo[itemMaxSize];
 	size_t ItemCount = itemMaxSize;
+	size_t CurrentIndex;
 
+	size_t FindAbove(float x, float y);
+	size_t FindBelow(float x, float y);
+	void GetRange(D2D1_POINT_2F pos, D2D1_RECT_F* pRange);
 	void DrawAll();
+
+	bool IsInside(D2D1_POINT_2F pos, size_t itemIndex);
 private:
 	DrnD2D* drnD2D;
+	D2D1_SIZE_F mapSize;
 	size_t IndexList[itemMaxSize];
 };
