@@ -49,9 +49,9 @@ void DrnMap::GetRange(D2D1_POINT_2F pos, D2D1_RECT_F* pRange)
 	size_t i;
 	for (i = 0; i < ItemCount; i++)
 	{
-		if (ItemsInfo[i].bottom >= pos.y && ItemsInfo[i].top < pos.y)
+		if (ItemsInfo[i].bottom >= pos.y - 30 && ItemsInfo[i].top < pos.y)
 		{
-			if (ItemsInfo[i].left >= pos.x + 28)
+			if (ItemsInfo[i].left >= pos.x + 15)
 			{
 				if ((changed[2] && ItemsInfo[i].left < pRange->right) || !changed[2])
 				{

@@ -146,11 +146,14 @@
     <ClCompile Include="Headers\DrnD2D.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maps\DrnMap.cpp" />
+    <ClCompile Include="Parkids.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Characters\Headers\Character.h" />
     <ClInclude Include="Headers\DrnD2D.h" />
     <ClInclude Include="Headers\DrnResourceCompiler.h" />
+    <ClInclude Include="Headers\Parkids.h" />
+    <ClInclude Include="Headers\Tools.h" />
     <ClInclude Include="Maps\Headers\DrnMap.h" />
   </ItemGroup>
   <ItemGroup>

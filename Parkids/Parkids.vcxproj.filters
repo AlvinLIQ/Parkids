@@ -39,6 +39,9 @@
     <ClCompile Include="Maps\DrnMap.cpp">
       <Filter>Maps</Filter>
     </ClCompile>
+    <ClCompile Include="Parkids.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\DrnD2D.h">
@@ -51,6 +54,12 @@
       <Filter>Maps\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Headers\DrnResourceCompiler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Tools.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Parkids.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

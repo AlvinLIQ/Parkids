@@ -1,15 +1,12 @@
-#include <Windows.h>
-#include "Maps/Headers/DrnMap.h"
+#include "Headers/Parkids.h"
 
 #ifndef UNICODE
 #define UNICODE
 #endif
 
-#define CurrentItem drnMap->ItemsInfo[drnMap->CurrentIndex]
 
 DrnD2D* drnD2D;
-DrnMap* drnMap;
-Character* player;
+Parkids* parkids;
 
 bool waitingForKey = false;
 
@@ -36,7 +33,6 @@ L"[ land.png ]\n"
 L"x:0.41 0.46\n"
 L"y:0.8 0.82";
 
-D2D1_SIZE_F d2dSize = {};
 PTP_TIMER d2dTimer;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -56,21 +52,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, NULL, hInstance, NULL);
 
-	player = new Character(L"Blueman-");
 	ShowWindow(hwnd, ParamNum);
 	drnD2D = new DrnD2D(hwnd);
 	while (drnD2D->d2dContext == nullptr);
-	for (int i = 0; i < 3; i++)
-		drnD2D->LoadBitmapFromFilename((L"Resources/" + player->CharacterName + (wchar_t)(i + 49) + L".png").c_str(), &player->CharacterBitmap[i]);
-
-	d2dTimer = CreateThreadpoolTimer(&drawTimer, NULL, NULL);
-
-	ULARGE_INTEGER uTime;
-	uTime.QuadPart = (LONGLONG)-(10000000);
-	FILETIME dueTime;
-	dueTime.dwHighDateTime = uTime.HighPart;
-	dueTime.dwLowDateTime = uTime.LowPart;
-	SetThreadpoolTimer(d2dTimer, &dueTime, (DWORD)16, 0);
+	parkids = new Parkids(drnD2D);
 
 	MSG msg = {};
 	while (GetMessage(&msg, hwnd, 0, 0))
@@ -82,23 +67,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 	return 0;
 }
 
-void SetCurrentItem(size_t newIndex)
-{
-	drnMap->CurrentIndex = newIndex;
-	player->CharacterPos.x = player->IsRight ? CurrentItem.left : CurrentItem.right - 32;
-	player->CharacterPos.y = CurrentItem.top - 60;
-}
 
 void CALLBACK drawTimer(PTP_CALLBACK_INSTANCE instance, PVOID context, PTP_TIMER timer)
 {
-	if (drnMap == nullptr)
-	{
-		d2dSize = drnD2D->d2dContext->GetSize();
-		drnMap = new DrnMap(resStr, d2dSize, drnD2D);
-		SetCurrentItem(0);
-	}
-	drnMap->GetRange(player->CharacterPos, &player->CharacterRange);
-	player->PrepareDraw();
+	parkids->drnMap->GetRange(parkids->player->CharacterPos, &parkids->player->CharacterRange);
+	parkids->player->PrepareDraw();
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -107,39 +80,31 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
-		CloseThreadpoolTimer(d2dTimer);
-		delete drnD2D;
+		delete parkids;
 		exit(0);
 
 	case WM_PAINT:
 	{
 		if (GetAsyncKeyState(VK_BACK))
 		{
-			player->IsRight = false;
-			SetCurrentItem(0);
+			parkids->player->IsRight = false;
+			parkids->SetCurrentItem(0);
 		}
 
 		drnD2D->d2dContext->BeginDraw();
 		drnD2D->d2dContext->Clear();
 		ID2D1SolidColorBrush* txtBrush;
 		drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &txtBrush);
-
-		if (drnMap == nullptr)
-		{
-			d2dSize = drnD2D->d2dContext->GetSize();
-			drnMap = new DrnMap(resStr, d2dSize, drnD2D);
-			SetCurrentItem(0);
-		}
 		
-		float left = player->GetX(),
-			top = player->GetY();
-		drnMap->DrawAll();
-		drnD2D->d2dContext->DrawBitmap(player->CharacterBitmap[player->CharacterState], player->GetRectF());
-		if (drnMap->IsInside(player->CharacterPos, 0))
+		float left = parkids->player->GetX(),
+			top = parkids->player->GetY();
+		parkids->drnMap->DrawAll();
+		drnD2D->d2dContext->DrawBitmap(parkids->player->CharacterBitmap[parkids->player->CharacterState], parkids->player->GetRectF());
+		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 0))
 		{
 			drnD2D->d2dContext->DrawTextW(L"Congratulations!\nyou've passed this level.", 44, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
-		if (drnMap->IsInside(player->CharacterPos, 3))
+		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 3))
 		{
 			drnD2D->d2dContext->DrawTextW(L"Oh, you lost.", 14, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
