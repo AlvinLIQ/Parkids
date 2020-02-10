@@ -13,7 +13,6 @@ Parkids::Parkids(DrnD2D* drnd2d)
 	d2dSize = drnD2D->d2dContext->GetSize();
 	drnMap = new DrnMap(ReadFileW(L"Resources/Maps/Map1.txt"), d2dSize, drnD2D);
 	SetCurrentItem(0);
-	QueryPerformanceFrequency(&mFreq);
 
 //	threadHandle = CreateThread(0, 0, &Parkids::CountThread, NULL, 0, NULL);
 	mThread = std::thread(&Parkids::CountThread, this, currentCount);
@@ -31,6 +30,7 @@ void Parkids::CountThread(LARGE_INTEGER oldCount)
 {
 	while (isRunning)
 	{
+		QueryPerformanceFrequency(&mFreq);
 		QueryPerformanceCounter(&currentCount);
 		passed += (currentCount.QuadPart - oldCount.QuadPart) / mFreq.QuadPart;
 		if (passed > 16000000000)

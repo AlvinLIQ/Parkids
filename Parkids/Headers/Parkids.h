@@ -11,6 +11,7 @@ public:
 	DrnD2D* drnD2D;
 	DrnMap* drnMap;
 	Character* player;
+	Character* monster;
 
 	void SetCurrentItem(size_t newIndex)
 	{
