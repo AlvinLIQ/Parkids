@@ -25,8 +25,8 @@ public:
 private:
 	void Tick();
 //	HANDLE threadHandle;
-	void CountThread(LARGE_INTEGER oldCount);
-	LARGE_INTEGER mFreq;
+	void CountThread();
+	LARGE_INTEGER oldCount = {};
 	LARGE_INTEGER currentCount = {};
 	LONGLONG passed = 0;
 	std::thread mThread;

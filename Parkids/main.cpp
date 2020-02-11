@@ -8,7 +8,7 @@
 DrnD2D* drnD2D;
 Parkids* parkids;
 
-bool waitingForKey = false;
+bool drew = false;
 
 const wchar_t resStr[] =
 L"[ land.png ]\n"
@@ -90,7 +90,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			parkids->player->IsRight = false;
 			parkids->SetCurrentItem(0);
 		}
-
+//		drnD2D->d2dContext->SaveDrawingState(drnD2D->d2dStateBlock.Get());
 		drnD2D->d2dContext->BeginDraw();
 		drnD2D->d2dContext->Clear();
 		ID2D1SolidColorBrush* txtBrush;
@@ -98,7 +98,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		
 		float left = parkids->player->GetX(),
 			top = parkids->player->GetY();
-		parkids->drnMap->DrawAll();
+
+		if (!drew)
+		{
+			parkids->drnMap->DrawAll();
+		}
 		drnD2D->d2dContext->DrawBitmap(parkids->player->CharacterBitmap[parkids->player->CharacterState], parkids->player->GetRectF());
 		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 0))
 		{
@@ -109,6 +113,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			drnD2D->d2dContext->DrawTextW(L"Oh, you lost.", 14, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
 		drnD2D->d2dContext->EndDraw();
+//		drnD2D->d2dContext->RestoreDrawingState(drnD2D->d2dStateBlock.Get());
 		drnD2D->dxgiSwapChain->Present(1, 0);
 	}
 	case WM_SIZE:

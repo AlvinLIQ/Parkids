@@ -15,6 +15,7 @@ public:
 	~DrnD2D();
 
 	Microsoft::WRL::ComPtr<ID2D1Factory1> d2dFactory;
+	Microsoft::WRL::ComPtr<ID2D1DrawingStateBlock> d2dStateBlock;
 	Microsoft::WRL::ComPtr<ID2D1Device> d2dDevice;
 	Microsoft::WRL::ComPtr<ID2D1DeviceContext> d2dContext;
 	Microsoft::WRL::ComPtr<ID3D11Device> d3dDevice;

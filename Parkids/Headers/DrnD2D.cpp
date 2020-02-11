@@ -53,8 +53,10 @@ void DrnD2D::InitD2D()
     dxgiFactory->CreateSwapChainForHwnd(d3dDevice.Get(), hwnd, &swapChainDesc, nullptr, nullptr, dxgiSwapChain.GetAddressOf());
 
     D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, d2dFactory.GetAddressOf());
+//    d2dFactory->CreateDrawingStateBlock(&d2dStateBlock);
     d2dFactory->CreateDevice(dxgiDevice.Get(), d2dDevice.GetAddressOf());
     d2dDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, d2dContext.GetAddressOf());
+
 
     SetTargetBitmap();
 

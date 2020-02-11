@@ -15,7 +15,7 @@ Parkids::Parkids(DrnD2D* drnd2d)
 	SetCurrentItem(0);
 
 //	threadHandle = CreateThread(0, 0, &Parkids::CountThread, NULL, 0, NULL);
-	mThread = std::thread(&Parkids::CountThread, this, currentCount);
+	mThread = std::thread(&Parkids::CountThread, this);
 	mThread.detach();
 }
 
@@ -26,14 +26,14 @@ Parkids::~Parkids()
 		mThread.join();
 }
 
-void Parkids::CountThread(LARGE_INTEGER oldCount)
+void Parkids::CountThread()
 {
 	while (isRunning)
 	{
-		QueryPerformanceFrequency(&mFreq);
 		QueryPerformanceCounter(&currentCount);
-		passed += (currentCount.QuadPart - oldCount.QuadPart) / mFreq.QuadPart;
-		if (passed > 16000000000)
+		passed += currentCount.QuadPart - oldCount.QuadPart;
+		oldCount = currentCount;
+		if (passed > 160000)
 		{
 			passed = 0LL;
 			Tick();
