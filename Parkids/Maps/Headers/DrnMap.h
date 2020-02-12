@@ -21,6 +21,8 @@ public:
 	void GetRange(D2D1_POINT_2F pos, D2D1_RECT_F* pRange);
 	void DrawAll();
 
+	void Resize(D2D1_SIZE_F newSize);
+
 	bool IsInside(D2D1_POINT_2F pos, size_t itemIndex);
 private:
 	DrnD2D* drnD2D;

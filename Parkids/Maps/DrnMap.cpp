@@ -100,7 +100,7 @@ void DrnMap::GetRange(D2D1_POINT_2F pos, D2D1_RECT_F* pRange)
 
 bool DrnMap::IsInside(D2D1_POINT_2F pos, size_t itemIndex)
 {
-	return (pos.x > ItemsInfo[itemIndex].left&& pos.x + 32 < ItemsInfo[itemIndex].right && pos.y < ItemsInfo[itemIndex].bottom && pos.y > ItemsInfo[itemIndex].top);
+	return (pos.x > ItemsInfo[itemIndex].left && pos.x + 32 < ItemsInfo[itemIndex].right && pos.y < ItemsInfo[itemIndex].bottom && pos.y > ItemsInfo[itemIndex].top);
 }
 
 void DrnMap::DrawAll()
@@ -113,4 +113,27 @@ void DrnMap::DrawAll()
 	{
 		drnD2D->d2dContext->DrawRectangle(D2D1::RectF(ItemsInfo[i].left, ItemsInfo[i].top, ItemsInfo[i].right, ItemsInfo[i].bottom), i == CurrentIndex ? currentBrush : itemBrush);
 	}
+}
+
+void DrnMap::Resize(D2D1_SIZE_F newSize)
+{
+	if (newSize.height <= 0 || newSize.width <= 0)
+		return;
+
+	float xRatio = mapSize.width / newSize.width,
+		  yRatio = mapSize.height / newSize.height;
+
+	for (size_t i = 0; i < ItemCount; i++)
+	{
+		ItemsInfo[i].left /= xRatio;
+		ItemsInfo[i].top /= yRatio;
+		ItemsInfo[i].right /= xRatio;
+		ItemsInfo[i].bottom /= yRatio;
+
+	}
+	drnD2D->d2dContext->SetTarget(nullptr);
+	drnD2D->dxgiSurface.ReleaseAndGetAddressOf();
+	auto hr = drnD2D->dxgiSwapChain->ResizeBuffers(2, static_cast<UINT>(newSize.width), static_cast<UINT>(newSize.height), DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+	drnD2D->SetTargetBitmap();
+	mapSize = newSize;
 }

@@ -24,7 +24,7 @@ void Character::Jump()
 	}
 	if (isHighestReached)
 		Drop();
-	else if (!jumpStep || CharacterPos.y <= CharacterRange.top)
+	else if (!jumpStep || CharacterPos.y - jumpStep + 1 <= CharacterRange.top)
 		isHighestReached = true;
 	else
 		CharacterPos.y -= --jumpStep;

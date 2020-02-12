@@ -118,9 +118,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_SIZE:
 	{
-//			drnD2D->dxgiSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_NONPREROTATED);
-//			drnD2D->dxgiSurface->Release();
-//			drnD2D->SetTargetBitmap();
+		if (parkids != nullptr && parkids->drnMap != nullptr)
+		{
+			RECT wndSize;
+			GetClientRect(hwnd, &wndSize);
+			parkids->drnMap->Resize(D2D1::SizeF((float)(wndSize.right - wndSize.left), (float)(wndSize.bottom - wndSize.top)));
+		}
+//		drnD2D->dxgiSurface->Release();
+//		drnD2D->SetTargetBitmap();
 	}
 	return 0;
 
