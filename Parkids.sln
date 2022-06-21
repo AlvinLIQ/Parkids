@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parkids", "Parkids\Parkids.vcxproj", "{674952B4-A953-48A2-BC19-B8A3728BA9DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C8554CDB-CD89-4458-B589-41D2570AC6B1} = {C8554CDB-CD89-4458-B589-41D2570AC6B1}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Murrela", "Parkids\Headers\Murrela\Murrela.vcxproj", "{C8554CDB-CD89-4458-B589-41D2570AC6B1}"
 EndProject

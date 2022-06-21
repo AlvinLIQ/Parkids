@@ -107,10 +107,11 @@ void DrnMap::DrawAll()
 {
 	ID2D1SolidColorBrush* itemBrush;
 	ID2D1SolidColorBrush* currentBrush;
-	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &itemBrush);
-	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue), &currentBrush);
+	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray), &itemBrush);
+	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::LightBlue), &currentBrush);
 	for (size_t i = 0; i < ItemCount; i++)
 	{
+		drnD2D->d2dContext->FillRectangle(D2D1::RectF(ItemsInfo[i].left, ItemsInfo[i].top, ItemsInfo[i].right, ItemsInfo[i].bottom), i == 0 ? currentBrush: itemBrush);
 		drnD2D->d2dContext->DrawRectangle(D2D1::RectF(ItemsInfo[i].left, ItemsInfo[i].top, ItemsInfo[i].right, ItemsInfo[i].bottom), i == CurrentIndex ? currentBrush : itemBrush);
 	}
 }

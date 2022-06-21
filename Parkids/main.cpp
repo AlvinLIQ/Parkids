@@ -103,6 +103,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		float left = parkids->player->GetX(),
 			top = parkids->player->GetY();
 
+
 		if (!drew)
 		{
 			parkids->drnMap->DrawAll();
@@ -110,13 +111,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		drnD2D->d2dContext->DrawBitmap(parkids->player->CharacterBitmap[parkids->player->CharacterState], parkids->player->GetRectF());
 		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 0))
 		{
-			drnD2D->d2dContext->DrawTextW(L"Congratulations!\nyou've passed this level.", 43, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
+			drnD2D->d2dContext->DrawTextW(L"Congratulations!\nyou passed this level.", 40, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
 		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 3))
 		{
 			drnD2D->d2dContext->DrawTextW(L"Oh, you lost.", 14, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
 //		content->Draw();
+
 		drnD2D->d2dContext->EndDraw();
 //		drnD2D->d2dContext->RestoreDrawingState(drnD2D->d2dStateBlock.Get());
 		drnD2D->dxgiSwapChain->Present(1, 0);
@@ -127,7 +129,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			RECT wndSize;
 			GetClientRect(hwnd, &wndSize);
-			parkids->drnMap->Resize(D2D1::SizeF((float)(wndSize.right - wndSize.left), (float)(wndSize.bottom - wndSize.top)));
+			D2D1_SIZE_F newSize = D2D1::SizeF((float)(wndSize.right - wndSize.left), (float)(wndSize.bottom - wndSize.top));
+			parkids->drnMap->Resize(newSize);
+			drnD2D->SetSize(newSize);
+			content->UpdateLayout();
+		}
+		if (drnD2D != nullptr)
+		{
+			
 		}
 //		drnD2D->dxgiSurface->Release();
 //		drnD2D->SetTargetBitmap();
