@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <iostream>
-#include "../../Headers/DrnD2D.h"
+#include "../../Headers/Murrela/Src/Core/Murrela/Headers/Murrela.h"
 
 #define WalkStep 1
 
@@ -59,7 +59,7 @@ private:
 	PTP_TIMER jumpTimer;
 	LONG jumpStep = 0;
 	bool lastState;
-	int step;
+	int step = 0;
 	bool isHighestReached;
 
 	void Walk();

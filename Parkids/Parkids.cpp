@@ -2,7 +2,7 @@
 
 D2D1_SIZE_F d2dSize = {};
 
-Parkids::Parkids(DrnD2D* drnd2d)
+Parkids::Parkids(Murrela* drnd2d)
 {
 	drnD2D = drnd2d;
 

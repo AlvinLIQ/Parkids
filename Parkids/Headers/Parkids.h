@@ -8,7 +8,7 @@
 class Parkids
 {
 public:
-	DrnD2D* drnD2D;
+	Murrela* drnD2D;
 	DrnMap* drnMap;
 	Character* player;
 	Character* monster;
@@ -20,7 +20,7 @@ public:
 		player->CharacterPos.y = CurrentItem.top - 60;
 	}
 
-	Parkids(DrnD2D* drnd2d);
+	Parkids(Murrela* drnd2d);
 	~Parkids();
 private:
 	void Tick();

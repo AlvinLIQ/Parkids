@@ -1,6 +1,6 @@
 #include "Headers/DrnMap.h"
 
-DrnMap::DrnMap(const wchar_t* mapSource, D2D1_SIZE_F nSize, DrnD2D* drnd2d)
+DrnMap::DrnMap(const wchar_t* mapSource, D2D1_SIZE_F nSize, Murrela* drnd2d)
 {
 	mapSize = nSize;
 	DrnResourceCompiler::GetItemsInfo(mapSource, ItemsInfo, IndexList, &ItemCount, nSize.width, nSize.height);
@@ -107,7 +107,7 @@ void DrnMap::DrawAll()
 {
 	ID2D1SolidColorBrush* itemBrush;
 	ID2D1SolidColorBrush* currentBrush;
-	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &itemBrush);
+	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &itemBrush);
 	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue), &currentBrush);
 	for (size_t i = 0; i < ItemCount; i++)
 	{

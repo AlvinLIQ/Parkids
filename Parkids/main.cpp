@@ -1,12 +1,15 @@
 #include "Headers/Parkids.h"
+#include "Headers/Murrela/Src/Core/Murrela/Headers/Controls.h"
 
 #ifndef UNICODE
 #define UNICODE
 #endif
 
+using namespace Controls;
 
-DrnD2D* drnD2D;
+Murrela* drnD2D;
 Parkids* parkids;
+Grid* content;
 
 bool drew = false;
 
@@ -53,10 +56,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 		NULL, NULL, hInstance, NULL);
 
 	ShowWindow(hwnd, ParamNum);
-	drnD2D = new DrnD2D(hwnd);
+	drnD2D = new Murrela(hwnd);
 	while (drnD2D->d2dContext == nullptr);
 	parkids = new Parkids(drnD2D);
-
+	content = new Grid(drnD2D, Stretch);
+	content->AppendItem((Control*)new Button(L"Text", drnD2D, Left | Top));
 	MSG msg = {};
 	while (GetMessage(&msg, hwnd, 0, 0))
 	{
@@ -92,9 +96,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 //		drnD2D->d2dContext->SaveDrawingState(drnD2D->d2dStateBlock.Get());
 		drnD2D->d2dContext->BeginDraw();
-		drnD2D->d2dContext->Clear();
+		drnD2D->d2dContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
 		ID2D1SolidColorBrush* txtBrush;
-		drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &txtBrush);
+		drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &txtBrush);
 		
 		float left = parkids->player->GetX(),
 			top = parkids->player->GetY();
@@ -106,12 +110,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		drnD2D->d2dContext->DrawBitmap(parkids->player->CharacterBitmap[parkids->player->CharacterState], parkids->player->GetRectF());
 		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 0))
 		{
-			drnD2D->d2dContext->DrawTextW(L"Congratulations!\nyou've passed this level.", 44, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
+			drnD2D->d2dContext->DrawTextW(L"Congratulations!\nyou've passed this level.", 43, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
 		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 3))
 		{
 			drnD2D->d2dContext->DrawTextW(L"Oh, you lost.", 14, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
+//		content->Draw();
 		drnD2D->d2dContext->EndDraw();
 //		drnD2D->d2dContext->RestoreDrawingState(drnD2D->d2dStateBlock.Get());
 		drnD2D->dxgiSwapChain->Present(1, 0);

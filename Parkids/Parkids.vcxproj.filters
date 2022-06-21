@@ -30,9 +30,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Headers\DrnD2D.cpp">
-      <Filter>Headers</Filter>
-    </ClCompile>
     <ClCompile Include="Characters\Character.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\DrnD2D.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Characters\Headers\Character.h">
       <Filter>Characters\Headers</Filter>
     </ClInclude>
