@@ -75,26 +75,29 @@ void Character::PrepareDraw()
 	else if (CharacterPos.x + walkStep[IsJumping] > CharacterRange.right)
 		CharacterPos.x = CharacterRange.right;
 
-	bool isKeyUp_Dwon = GetAsyncKeyState(VK_UP);
-	if (!isKeyUp_Dwon || !lastState || IsJumping)
+	if (!IsJumping && CharacterPos.y + 60 != CharacterRange.bottom)
 	{
-		if (isKeyUp_Dwon)
+		Drop();
+	}
+	else
+	{
+		bool isKeyUp_Dwon = GetAsyncKeyState(VK_UP);
+		if (!isKeyUp_Dwon || !lastState || IsJumping)
 		{
-			Jump();
-			CharacterState = 1;
-		}
-		else if (IsJumping)
-		{
-			SetDirection(1);
-			Jump();
-			CharacterState = 1;
-		}
-		else if (CharacterPos.y + 60 != CharacterRange.bottom)
-		{
-			Drop();
-		}
+			if (isKeyUp_Dwon)
+			{
+				Jump();
+				CharacterState = 1;
+			}
+			else if (IsJumping)
+			{
+				SetDirection(1);
+				Jump();
+				CharacterState = 1;
+			}
 
-		lastState = isKeyUp_Dwon;
+			lastState = isKeyUp_Dwon;
+		}
 	}
 	
 }
