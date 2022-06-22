@@ -46,10 +46,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 	murrela = coreApp->murrela;
 	parkids = new Parkids(coreApp->murrela);
 
-	ItemsContainer* mContainer = new ItemsContainer(murrela, Stretch);
+	ItemsContainer* mContainer = new StackPanel(murrela, Center);
 	coreApp->content = (Control*)mContainer;
-//	mContainer->AppendItem((Control*)new Button(L"Start", murrela, Center));
-	mContainer->AppendItem((Control*)parkids);
+	
+	auto title = new TextBlock(L"Parkids", murrela, Center, Left | Center, { 200, 80 });
+	mContainer->AppendItem((Control*)title);
+	title->SetFontSize(40);
+
+	mContainer->AppendItem((Control*)new Button(L"Start", murrela, Center, {80, 40}));
+//	mContainer->AppendItem((Control*)parkids);
 	coreApp->SizeChanged.push_back([](void* param)
 		{
 			if (parkids != nullptr && parkids->drnMap != nullptr)
