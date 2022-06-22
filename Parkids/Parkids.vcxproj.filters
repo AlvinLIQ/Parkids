@@ -25,6 +25,12 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{4b92e54d-af4f-49a8-be9f-34483b80d2ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Headers">
+      <UniqueIdentifier>{01df45f6-2cd0-420c-8b78-3110e499e42d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="Parkids.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\MainPage.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="Headers\Parkids.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Headers\MainPage.h">
+      <Filter>UI\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

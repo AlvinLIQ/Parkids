@@ -1,5 +1,5 @@
 #include "Headers/Parkids.h"
-#include "Headers/Murrela/Src/Core/Murrela/Headers/CoreApp.h"
+#include "UI/Headers/MainPage.h"
 
 #ifndef UNICODE
 #define UNICODE
@@ -44,27 +44,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 {
 	CoreApp* coreApp = new CoreApp(hInstance);
 	murrela = coreApp->murrela;
-	parkids = new Parkids(coreApp->murrela);
-
-	ItemsContainer* mContainer = new StackPanel(murrela, Center);
-	coreApp->content = (Control*)mContainer;
+//	parkids = new Parkids(coreApp->murrela);
 	
-	auto title = new TextBlock(L"Parkids", murrela, Center, Left | Center, { 200, 80 });
-	mContainer->AppendItem((Control*)title);
-	title->SetFontSize(40);
-
-	mContainer->AppendItem((Control*)new Button(L"Start", murrela, Center, {80, 40}));
 //	mContainer->AppendItem((Control*)parkids);
-	coreApp->SizeChanged.push_back([](void* param)
-		{
-			if (parkids != nullptr && parkids->drnMap != nullptr)
-			{
-				RECT wndSize;
-				GetClientRect(murrela->GetWindow(), &wndSize);
-				D2D1_SIZE_F newSize = D2D1::SizeF((float)(wndSize.right - wndSize.left), (float)(wndSize.bottom - wndSize.top));
-				parkids->drnMap->Resize(newSize);
-			}
-		});
+	coreApp->content = (Control*)new MainPage(murrela);
+	
 	coreApp->Run();
 	delete coreApp;
 	coreApp = nullptr;
@@ -97,7 +81,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 	*/
 	return 0;
 }
-
+/* Deprecated
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
@@ -162,4 +146,4 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}
+}*/

@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maps\DrnMap.cpp" />
     <ClCompile Include="Parkids.cpp" />
+    <ClCompile Include="UI\MainPage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Characters\Headers\Character.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Headers\Parkids.h" />
     <ClInclude Include="Headers\Tools.h" />
     <ClInclude Include="Maps\Headers\DrnMap.h" />
+    <ClInclude Include="UI\Headers\MainPage.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Blueman-1.png" />

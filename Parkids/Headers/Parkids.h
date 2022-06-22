@@ -2,6 +2,7 @@
 #include "Tools.h"
 #include "../Maps/Headers/DrnMap.h"
 #include "Murrela/Src/Core/Murrela/Headers/Controls.h"
+
 #include <thread>
 
 #define CurrentItem drnMap->ItemsInfo[drnMap->CurrentIndex]
