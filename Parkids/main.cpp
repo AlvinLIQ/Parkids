@@ -1,5 +1,5 @@
 #include "Headers/Parkids.h"
-#include "Headers/Murrela/Src/Core/Murrela/Headers/Controls.h"
+#include "Headers/Murrela/Src/Core/Murrela/Headers/CoreApp.h"
 
 #ifndef UNICODE
 #define UNICODE
@@ -7,12 +7,12 @@
 
 using namespace Controls;
 
-Murrela* drnD2D;
+Murrela* murrela;
 Parkids* parkids;
 Grid* content;
 
 bool drew = false;
-
+/*
 const wchar_t resStr[] =
 L"[ land.png ]\n"
 L"x:0.2 0.5\n"
@@ -35,14 +35,36 @@ L"y:0.8 0.82\n"
 L"[ land.png ]\n"
 L"x:0.41 0.46\n"
 L"y:0.8 0.82";
-
+*/
 PTP_TIMER d2dTimer;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void CALLBACK drawTimer(PTP_CALLBACK_INSTANCE instance, PVOID context, PTP_TIMER timer);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int ParamNum)
 {
+	CoreApp* coreApp = new CoreApp(hInstance);
+	murrela = coreApp->murrela;
+	parkids = new Parkids(coreApp->murrela);
+
+	ItemsContainer* mContainer = new ItemsContainer(murrela, Stretch);
+	coreApp->content = (Control*)mContainer;
+//	mContainer->AppendItem((Control*)new Button(L"Start", murrela, Center));
+	mContainer->AppendItem((Control*)parkids);
+	coreApp->SizeChanged.push_back([](void* param)
+		{
+			if (parkids != nullptr && parkids->drnMap != nullptr)
+			{
+				RECT wndSize;
+				GetClientRect(murrela->GetWindow(), &wndSize);
+				D2D1_SIZE_F newSize = D2D1::SizeF((float)(wndSize.right - wndSize.left), (float)(wndSize.bottom - wndSize.top));
+				parkids->drnMap->Resize(newSize);
+			}
+		});
+	coreApp->Run();
+	delete coreApp;
+	coreApp = nullptr;
+
+	/*
 	WNDCLASS wc = {};
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.lpfnWndProc = WindowProc;
@@ -56,26 +78,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE pInstance, LPWSTR Param, int 
 		NULL, NULL, hInstance, NULL);
 
 	ShowWindow(hwnd, ParamNum);
-	drnD2D = new Murrela(hwnd);
-	while (drnD2D->d2dContext == nullptr);
-	parkids = new Parkids(drnD2D);
-	content = new Grid(drnD2D, Stretch);
-	content->AppendItem((Control*)new Button(L"Text", drnD2D, Left | Top));
+	murrela = new Murrela(hwnd);
+	while (murrela->d2dContext == nullptr);
+	parkids = new Parkids(murrela);
+	content = new Grid(murrela, Stretch);
+	content->AppendItem((Control*)new Button(L"Text", murrela, Left | Top));
 	MSG msg = {};
 	while (GetMessage(&msg, hwnd, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-
+	*/
 	return 0;
-}
-
-
-void CALLBACK drawTimer(PTP_CALLBACK_INSTANCE instance, PVOID context, PTP_TIMER timer)
-{
-	parkids->drnMap->GetRange(parkids->player->CharacterPos, &parkids->player->CharacterRange);
-	parkids->player->PrepareDraw();
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -94,34 +109,31 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			parkids->player->IsRight = false;
 			parkids->SetCurrentItem(0);
 		}
-//		drnD2D->d2dContext->SaveDrawingState(drnD2D->d2dStateBlock.Get());
-		drnD2D->d2dContext->BeginDraw();
-		drnD2D->d2dContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
+//		murrela->d2dContext->SaveDrawingState(murrela->d2dStateBlock.Get());
+		murrela->d2dContext->BeginDraw();
+		murrela->d2dContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
 		ID2D1SolidColorBrush* txtBrush;
-		drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &txtBrush);
+		murrela->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &txtBrush);
 		
-		float left = parkids->player->GetX(),
-			top = parkids->player->GetY();
-
 
 		if (!drew)
 		{
 			parkids->drnMap->DrawAll();
 		}
-		drnD2D->d2dContext->DrawBitmap(parkids->player->CharacterBitmap[parkids->player->CharacterState], parkids->player->GetRectF());
+		murrela->d2dContext->DrawBitmap(parkids->player->CharacterBitmap[parkids->player->CharacterState], parkids->player->GetRectF());
 		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 0))
 		{
-			drnD2D->d2dContext->DrawTextW(L"Congratulations!\nyou passed this level.", 40, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
+			murrela->d2dContext->DrawTextW(L"Congratulations!\nyou passed this level.", 40, murrela->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
 		if (parkids->drnMap->IsInside(parkids->player->CharacterPos, 3))
 		{
-			drnD2D->d2dContext->DrawTextW(L"Oh, you lost.", 14, drnD2D->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
+			murrela->d2dContext->DrawTextW(L"Oh, you lost.", 14, murrela->txtFormat.Get(), D2D1::RectF(0, 0, 500, 0), txtBrush);
 		}
 //		content->Draw();
 
-		drnD2D->d2dContext->EndDraw();
-//		drnD2D->d2dContext->RestoreDrawingState(drnD2D->d2dStateBlock.Get());
-		drnD2D->dxgiSwapChain->Present(1, 0);
+		murrela->d2dContext->EndDraw();
+//		murrela->d2dContext->RestoreDrawingState(murrela->d2dStateBlock.Get());
+		murrela->dxgiSwapChain->Present(1, 0);
 	}
 	case WM_SIZE:
 	{
@@ -131,15 +143,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetClientRect(hwnd, &wndSize);
 			D2D1_SIZE_F newSize = D2D1::SizeF((float)(wndSize.right - wndSize.left), (float)(wndSize.bottom - wndSize.top));
 			parkids->drnMap->Resize(newSize);
-			drnD2D->SetSize(newSize);
+			murrela->SetSize(newSize);
 			content->UpdateLayout();
 		}
-		if (drnD2D != nullptr)
+		if (murrela != nullptr)
 		{
 			
 		}
-//		drnD2D->dxgiSurface->Release();
-//		drnD2D->SetTargetBitmap();
+//		murrela->dxgiSurface->Release();
+//		murrela->SetTargetBitmap();
 	}
 	return 0;
 

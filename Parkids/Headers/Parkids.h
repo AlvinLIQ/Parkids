@@ -1,14 +1,14 @@
 #pragma once
 #include "Tools.h"
 #include "../Maps/Headers/DrnMap.h"
+#include "Murrela/Src/Core/Murrela/Headers/Controls.h"
 #include <thread>
 
 #define CurrentItem drnMap->ItemsInfo[drnMap->CurrentIndex]
 
-class Parkids
+class Parkids : Controls::Control
 {
 public:
-	Murrela* drnD2D;
 	DrnMap* drnMap;
 	Character* player;
 	Character* monster;
@@ -20,7 +20,9 @@ public:
 		player->CharacterPos.y = CurrentItem.top - 60;
 	}
 
-	Parkids(Murrela* drnd2d);
+	void Draw();
+
+	Parkids(Murrela* murla);
 	~Parkids();
 private:
 	void Tick();

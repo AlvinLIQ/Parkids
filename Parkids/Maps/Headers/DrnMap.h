@@ -9,7 +9,7 @@
 class DrnMap
 {
 public:
-	DrnMap(const wchar_t* mapSource, D2D1_SIZE_F nSize, Murrela* drnd2d);
+	DrnMap(const wchar_t* mapSource, D2D1_SIZE_F nSize, Murrela* murla);
 	~DrnMap();
 
 	DrnResourceItemInfo ItemsInfo[itemMaxSize];
@@ -25,7 +25,7 @@ public:
 
 	bool IsInside(D2D1_POINT_2F pos, size_t itemIndex);
 private:
-	Murrela* drnD2D;
+	Murrela* murrela;
 	D2D1_SIZE_F mapSize;
 	size_t IndexList[itemMaxSize];
 };

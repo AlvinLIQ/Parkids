@@ -1,10 +1,10 @@
 #include "Headers/DrnMap.h"
 
-DrnMap::DrnMap(const wchar_t* mapSource, D2D1_SIZE_F nSize, Murrela* drnd2d)
+DrnMap::DrnMap(const wchar_t* mapSource, D2D1_SIZE_F nSize, Murrela* murla)
 {
 	mapSize = nSize;
 	DrnResourceCompiler::GetItemsInfo(mapSource, ItemsInfo, IndexList, &ItemCount, nSize.width, nSize.height);
-	drnD2D = drnd2d;
+	murrela = murla;
 	CurrentIndex = 0;
 }
 
@@ -107,12 +107,12 @@ void DrnMap::DrawAll()
 {
 	ID2D1SolidColorBrush* itemBrush;
 	ID2D1SolidColorBrush* currentBrush;
-	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray), &itemBrush);
-	drnD2D->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::LightBlue), &currentBrush);
+	murrela->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray), &itemBrush);
+	murrela->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::LightBlue), &currentBrush);
 	for (size_t i = 0; i < ItemCount; i++)
 	{
-		drnD2D->d2dContext->FillRectangle(D2D1::RectF(ItemsInfo[i].left, ItemsInfo[i].top, ItemsInfo[i].right, ItemsInfo[i].bottom), i == 0 ? currentBrush: itemBrush);
-		drnD2D->d2dContext->DrawRectangle(D2D1::RectF(ItemsInfo[i].left, ItemsInfo[i].top, ItemsInfo[i].right, ItemsInfo[i].bottom), i == CurrentIndex ? currentBrush : itemBrush);
+		murrela->d2dContext->FillRectangle(D2D1::RectF(ItemsInfo[i].left, ItemsInfo[i].top, ItemsInfo[i].right, ItemsInfo[i].bottom), i == 0 ? currentBrush: itemBrush);
+		murrela->d2dContext->DrawRectangle(D2D1::RectF(ItemsInfo[i].left, ItemsInfo[i].top, ItemsInfo[i].right, ItemsInfo[i].bottom), i == CurrentIndex ? currentBrush : itemBrush);
 	}
 }
 
@@ -132,9 +132,5 @@ void DrnMap::Resize(D2D1_SIZE_F newSize)
 		ItemsInfo[i].bottom /= yRatio;
 
 	}
-	drnD2D->d2dContext->SetTarget(nullptr);
-	drnD2D->dxgiSurface.ReleaseAndGetAddressOf();
-	auto hr = drnD2D->dxgiSwapChain->ResizeBuffers(2, static_cast<UINT>(newSize.width), static_cast<UINT>(newSize.height), DXGI_FORMAT_B8G8R8A8_UNORM, 0);
-	drnD2D->SetTargetBitmap();
 	mapSize = newSize;
 }
