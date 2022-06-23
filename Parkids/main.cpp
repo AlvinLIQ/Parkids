@@ -126,7 +126,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_SIZE:
 	{
-		if (parkids != nullptr && parkids->drnMap != nullptr)
+		if (parkids != nullptr&& parkids->drnMap != nullptr)
 		{
 			RECT wndSize;
 			GetClientRect(hwnd, &wndSize);

@@ -39,4 +39,24 @@ MainPage::MainPage(Murrela* murla) : ItemsContainer(murla, Stretch)
 		});
 	this->AppendItem((Control*)mContainer);
 
+	murrela->d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::LightSkyBlue), &brushes[0]);
+}
+
+void MainPage::Draw()
+{	
+	/*
+	D2D1_RECT_F tRect;
+	if (time(NULL) > lastTime)
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			tRect.left = (FLOAT)(rand() % (int)ControlSize.width);
+			tRect.top = (FLOAT)(rand() % (int)ControlSize.height);
+			tRect.right = tRect.left + 5;
+			tRect.bottom = tRect.top + 5;
+			murrela->d2dContext->FillRectangle(tRect, brushes[0]);
+		}
+	}
+	lastTime = time(NULL);*/
+	ItemsContainer::Draw();
 }

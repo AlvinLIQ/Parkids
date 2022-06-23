@@ -10,6 +10,10 @@ public:
 
 	}
 
+	void Draw();
+
 	Parkids* parkids;
+private:
+	time_t lastTime = 0;
 protected:
 };
