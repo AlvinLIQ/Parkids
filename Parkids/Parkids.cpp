@@ -14,6 +14,7 @@ Parkids::Parkids(Murrela* murla) : Control(murla, Controls::Stretch)
 	SetCurrentItem(0);
 
 //	threadHandle = CreateThread(0, 0, &Parkids::CountThread, NULL, 0, NULL);
+	Tick();
 	mThread = std::thread(&Parkids::CountThread, this);
 	mThread.detach();
 }
